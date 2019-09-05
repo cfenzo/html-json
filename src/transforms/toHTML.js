@@ -1,5 +1,5 @@
-import { htmlSafeProps, getJSON } from "./utils";
-const toHTML = (
+import { htmlSafeProps, getJSON } from "../utils";
+export const toHTML = (
   json,
   { tagMap = {}, excludedTags = [], allowedTags = [] } = {}
 ) => {
@@ -9,7 +9,7 @@ const toHTML = (
         return node.children.map(parseNode).join("");
       case "text":
         return node.value;
-      case "tag":
+      case "tag": {
         let tag = node.name in tagMap ? tagMap[node.name] : node.name;
         if (!tag) {
           return "";
@@ -37,6 +37,7 @@ const toHTML = (
             ? `>${node.children.map(parseNode).join("")}</${tag}>`
             : "/>"
         }`;
+      }
       default:
         return "";
     }
@@ -48,8 +49,4 @@ const toHTML = (
     throw new Error("Invalid json", json);
   }
   return parseNode(_json);
-};
-
-module.exports = {
-  toHTML
 };

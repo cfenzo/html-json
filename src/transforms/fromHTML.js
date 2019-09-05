@@ -1,7 +1,7 @@
 const { tokenize, constructTree } = require("hyntax");
-const { removeLineBreaks } = require("./utils");
+const { removeLineBreaks, filterNoUndefined } = require("../utils");
 
-/* Returns very simple JSON format, with these types:
+/* Returns very simple JSON format, with these node types:
   // document
   {
     type: document
@@ -21,7 +21,7 @@ const { removeLineBreaks } = require("./utils");
   }
 */
 
-const toJSON = (
+export const fromHTML = (
   html,
   {
     allowStyle = false,
@@ -32,10 +32,10 @@ const toJSON = (
 ) => {
   const { tokens } = tokenize(removeLineBreaks(html.trim()));
   const { ast } = constructTree(tokens);
-
-  const getChildren = children =>
-    children.map(parseNode).filter(child => child !== undefined);
   const parseNode = node => {
+    const getChildren = children =>
+      children.map(parseNode).filter(filterNoUndefined);
+
     switch (node.nodeType) {
       case "document":
         return {
@@ -47,7 +47,7 @@ const toJSON = (
           type: node.nodeType,
           value: node.content.value.content
         };
-      case "tag":
+      case "tag": {
         let children =
           node.content.children && getChildren(node.content.children);
         if (
@@ -55,14 +55,14 @@ const toJSON = (
           excludedTags.length &&
           excludedTags.find(node.content.name)
         ) {
-          return;
+          return undefined;
         }
         if (
           allowedTags &&
           allowedTags.length &&
           !allowedTags.find(node.content.name)
         ) {
-          return;
+          return undefined;
         }
         return {
           type: node.nodeType,
@@ -81,15 +81,12 @@ const toJSON = (
               children
             })
         };
+      }
       default:
         // TODO: implement handeling of script, style and comments
         // comment and doctype is returned as undefined
-        return;
+        return undefined;
     }
   };
   return parseNode(ast);
-};
-
-module.exports = {
-  toJSON
 };

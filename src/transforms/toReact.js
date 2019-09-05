@@ -1,8 +1,8 @@
 // mock
-const React = require("react");
-const { htmlSafeProps, getJSON } = require("./utils");
+import React from "react";
+import { htmlSafeProps, getJSON } from "../utils";
 
-const toReact = (
+export const toReact = (
   json,
   { tagMap = {}, excludedTags = [], allowedTags = [] } = {}
 ) => {
@@ -16,7 +16,7 @@ const toReact = (
         );
       case "text":
         return node.value;
-      case "tag":
+      case "tag": {
         let tag = node.name in tagMap ? tagMap[node.name] : node.name;
         if (!tag) {
           return null;
@@ -46,6 +46,7 @@ const toReact = (
           props,
           node.children ? node.children.map(parseNode) : null
         );
+      }
       default:
         return null;
     }
@@ -57,8 +58,4 @@ const toReact = (
     throw new Error("Invalid json", json);
   }
   return parseNode(_json);
-};
-
-module.exports = {
-  toReact
 };

@@ -1,15 +1,13 @@
 import React, { useReducer } from "react";
 import ReactDOM from "react-dom";
-
 import "./styles.css";
-import { toJSON } from "./html2json";
-import { toReact } from "./json2react";
-import { toHTML } from "./json2html";
+
+import { fromHTML, toReact, toHTML } from "./transforms";
 
 const appReducer = (state, action) => {
   switch (action.type) {
     case "save:html":
-      let json = toJSON(action.html);
+      let json = fromHTML(action.html);
       return {
         html: action.html,
         json: JSON.stringify(json),
@@ -36,7 +34,7 @@ function App() {
       react: null
     },
     state => {
-      let json = toJSON(state.html);
+      let json = fromHTML(state.html);
       return {
         html: state.html,
         json: JSON.stringify(json),
