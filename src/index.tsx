@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import ReactDOM from "react-dom";
 import "./styles.css";
 
-import { serialize, toReact, toHTML } from "./transforms";
+import { serialize, toReact, toHTML } from "./lib";
 
 type stateType = {
   html: string;
