@@ -1,10 +1,18 @@
 import { htmlSafeProps, getJSON } from "../utils";
+import { AllNodeTypes } from "../index.d";
+
+export type optionsType = {
+  tagMap?: {};
+  excludedTags?: [];
+  allowedTags?: [];
+};
+
 export const toHTML = (
-  json,
-  { tagMap = {}, excludedTags = [], allowedTags = [] } = {}
+  json: object | string,
+  { tagMap = {}, allowedTags = [], excludedTags = [] }: optionsType = {}
 ) => {
-  const parseNode = (node, i = -1) => {
-    switch (node.type) {
+  const parseNode = (node: AllNodeTypes, i = -1): string => {
+    switch (node._type) {
       case "document":
         return node.children.map(parseNode).join("");
       case "text":
@@ -17,14 +25,14 @@ export const toHTML = (
         if (
           excludedTags &&
           excludedTags.length &&
-          excludedTags.find(node.content.name)
+          excludedTags.find(name => name === node.name)
         ) {
           return "";
         }
         if (
           allowedTags &&
           allowedTags.length &&
-          !allowedTags.find(node.content.name)
+          !allowedTags.find(name => name === node.name)
         ) {
           return "";
         }
@@ -46,7 +54,7 @@ export const toHTML = (
   // do the magic
   const _json = getJSON(json);
   if (!json) {
-    throw new Error("Invalid json", json);
+    throw new Error("Invalid json");
   }
-  return parseNode(_json);
+  return parseNode(_json as AllNodeTypes);
 };

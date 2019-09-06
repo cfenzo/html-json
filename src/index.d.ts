@@ -1,15 +1,15 @@
 export type DocumentNodeType = {
-  type: "document";
+  _type: "document";
   children: ElementNodeTypes[];
 };
 export type TagNodeType = {
-  type: "tag";
+  _type: "tag";
   name: string;
   children?: ElementNodeTypes[];
   attributes?: TagAttributeType[];
 };
 export type TextNodeType = {
-  type: "text";
+  _type: "text";
   value: string;
 };
 export type TagAttributeType = {

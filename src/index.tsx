@@ -4,6 +4,12 @@ import "./styles.css";
 
 import { fromHTML, toReact, toHTML } from "./transforms";
 
+type stateType = {
+  html: string;
+  json: string;
+  react: React.ReactNode;
+};
+
 const appReducer = (state, action) => {
   switch (action.type) {
     case "save:html":
@@ -26,22 +32,15 @@ const appReducer = (state, action) => {
 };
 
 function App() {
-  const [state, dispatch] = useReducer(
-    appReducer,
-    {
-      html: `<h1>Heading</h1>`,
-      json: "",
-      react: null
-    },
-    state => {
-      let json = fromHTML(state.html);
-      return {
-        html: state.html,
-        json: JSON.stringify(json),
-        react: toReact(json)
-      };
-    }
-  );
+  const [state, dispatch] = useReducer(appReducer, null, state => {
+    let html = `<h1>Heading</h1>`;
+    let json = fromHTML(html);
+    return {
+      html: html,
+      json: JSON.stringify(json),
+      react: toReact(json)
+    };
+  });
   return (
     <table className="editor">
       <thead>
