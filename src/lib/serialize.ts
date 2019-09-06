@@ -81,14 +81,9 @@ function getChildren(
 
 export const serialize = (
   html: string,
-  options = {
-    allowStyle: false,
-    allowScript: false,
-    excludedTags: [],
-    allowedTags: []
-  }
+  { excludedTags = [], allowedTags = [] }: optionsType = {}
 ): AllNodeTypes => {
   const { tokens } = tokenize(removeLineBreaks(html.trim()));
   const { ast } = constructTree(tokens);
-  return creators.document(ast, options);
+  return creators.document(ast, { excludedTags, allowedTags });
 };
