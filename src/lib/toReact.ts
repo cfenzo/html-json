@@ -1,16 +1,14 @@
 import React from "react";
 import { htmlSafeProps, getJSON } from "../utils";
-import { AllNodeTypes } from "../index.d";
-
-export type optionsType = {
-  tagMap?: object;
-  excludedTags?: string[];
-  allowedTags?: string[];
-};
+import { AllNodeTypes, deserializeOptionsType } from "../index.d";
 
 export const toReact = (
   json: AllNodeTypes,
-  { tagMap = {}, allowedTags = [], excludedTags = [] }: optionsType = {}
+  {
+    tagMap = {},
+    allowedTags = [],
+    excludedTags = []
+  }: deserializeOptionsType = {}
 ) => {
   const parseNode = (node: AllNodeTypes, i = -1): React.ReactNode => {
     switch (node._type) {

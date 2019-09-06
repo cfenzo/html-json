@@ -1,15 +1,13 @@
 import { htmlSafeProps, getJSON } from "../utils";
-import { AllNodeTypes } from "../index.d";
-
-export type optionsType = {
-  tagMap?: {};
-  excludedTags?: [];
-  allowedTags?: [];
-};
+import { AllNodeTypes, deserializeOptionsType } from "../index.d";
 
 export const toHTML = (
   json: object | string,
-  { tagMap = {}, allowedTags = [], excludedTags = [] }: optionsType = {}
+  {
+    tagMap = {},
+    allowedTags = [],
+    excludedTags = []
+  }: deserializeOptionsType = {}
 ) => {
   const parseNode = (node: AllNodeTypes, i = -1): string => {
     switch (node._type) {
