@@ -1,6 +1,6 @@
 import { tokenize, constructTree, TreeConstructor } from "hyntax";
 import { removeLineBreaks, filterNoUndefined } from "../utils";
-import { AllNodeTypes, DocumentNodeType, TextNodeType } from "../index.d";
+import { AllNodeTypes, DocumentNodeType, TextNodeType } from "../types";
 
 export type optionsType = {
   allowedTags?: string[];
@@ -79,11 +79,16 @@ function getChildren(
     .filter(filterNoUndefined);
 }
 
-export const fromHTML = (
+export const serialize = (
   html: string,
-  { excludedTags = [], allowedTags = [] }: optionsType = {}
+  options = {
+    allowStyle: false,
+    allowScript: false,
+    excludedTags: [],
+    allowedTags: []
+  }
 ): AllNodeTypes => {
   const { tokens } = tokenize(removeLineBreaks(html.trim()));
   const { ast } = constructTree(tokens);
-  return creators.document(ast, { excludedTags, allowedTags });
+  return creators.document(ast, options);
 };
