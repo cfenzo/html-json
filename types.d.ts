@@ -2,10 +2,14 @@ declare function serialize(
   html: string,
   options?: serializeOptionsType
 ): DocumentNodeType;
-declare function deserialize(
+declare function toHTML(
   nodes: DocumentNodeType,
   options?: deserializeOptionsType
 ): string;
+declare function toReact(
+  nodes: DocumentNodeType,
+  options?: deserializeOptionsType
+): React.ReactNode;
 
 // various options
 export type serializeOptionsType = {

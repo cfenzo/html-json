@@ -4,17 +4,7 @@ import "./styles.css";
 
 import { serialize, toReact, toHTML } from "./lib";
 
-type stateType = {
-  html: string;
-  json: string;
-  react: React.ReactNode;
-};
-type actionType = {
-  type: string;
-  payload: any;
-};
-
-const appReducer = (state: stateType, action: actionType) => {
+const appReducer = (state, action) => {
   switch (action.type) {
     case "save:html":
       let json = serialize(action.payload);

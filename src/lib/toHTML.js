@@ -1,15 +1,10 @@
 import { htmlSafeProps, getJSON } from "../utils";
-import { AllNodeTypes, deserializeOptionsType } from "../index.d";
 
 export const toHTML = (
-  json: object | string,
-  {
-    tagMap = {},
-    allowedTags = [],
-    excludedTags = []
-  }: deserializeOptionsType = {}
+  json,
+  { tagMap = {}, allowedTags = [], excludedTags = [] } = {}
 ) => {
-  const parseNode = (node: AllNodeTypes, i = -1): string => {
+  const parseNode = (node, i = -1) => {
     switch (node._type) {
       case "document":
         return node.children.map(parseNode).join("");
@@ -54,5 +49,5 @@ export const toHTML = (
   if (!json) {
     throw new Error("Invalid json");
   }
-  return parseNode(_json as AllNodeTypes);
+  return parseNode(_json);
 };

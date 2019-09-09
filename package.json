@@ -5,14 +5,10 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "@types/react": "16.9.2",
     "hyntax": "1.1.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-scripts": "3.0.1"
-  },
-  "devDependencies": {
-    "typescript": "3.3.3"
   },
   "scripts": {
     "start": "react-scripts start",

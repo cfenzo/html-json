@@ -1,16 +1,11 @@
 import React from "react";
 import { htmlSafeProps, getJSON } from "../utils";
-import { AllNodeTypes, deserializeOptionsType } from "../index.d";
 
 export const toReact = (
-  json: AllNodeTypes,
-  {
-    tagMap = {},
-    allowedTags = [],
-    excludedTags = []
-  }: deserializeOptionsType = {}
+  json,
+  { tagMap = {}, allowedTags = [], excludedTags = [] } = {}
 ) => {
-  const parseNode = (node: AllNodeTypes, i = -1): React.ReactNode => {
+  const parseNode = (node, i = -1) => {
     switch (node._type) {
       case "document":
         return React.createElement(
@@ -61,5 +56,5 @@ export const toReact = (
   if (!json) {
     throw new Error("Invalid json");
   }
-  return parseNode(_json as AllNodeTypes);
+  return parseNode(_json);
 };

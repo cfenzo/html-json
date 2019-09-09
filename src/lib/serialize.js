@@ -1,27 +1,16 @@
-import { tokenize, constructTree, TreeConstructor } from "hyntax";
+import { tokenize, constructTree } from "hyntax";
 import { removeLineBreaks, filterNoUndefined } from "../utils";
-import {
-  AllNodeTypes,
-  DocumentNodeType,
-  TextNodeType,
-  serializeOptionsType
-} from "../index.d";
 
 const creators = {
-  document: (
-    node: TreeConstructor.DocumentNode,
-    options: serializeOptionsType
-  ) =>
-    ({
-      _type: "document",
-      children: getChildren(node.content.children, options)
-    } as DocumentNodeType),
-  text: (node: TreeConstructor.TextNode) =>
-    ({
-      _type: "text",
-      value: node.content.value.content
-    } as TextNodeType),
-  tag: (node: TreeConstructor.TagNode, options: serializeOptionsType) => {
+  document: (node, options) => ({
+    _type: "document",
+    children: getChildren(node.content.children, options)
+  }),
+  text: node => ({
+    _type: "text",
+    value: node.content.value.content
+  }),
+  tag: (node, options) => {
     let children =
       node.content.children && getChildren(node.content.children, options);
     if (
@@ -60,32 +49,26 @@ const creators = {
     };
   },
   // never return style and script tags
-  style: (node: TreeConstructor.StyleNode) => undefined,
-  script: (node: TreeConstructor.ScriptNode) => undefined
+  style: node => undefined,
+  script: node => undefined
 };
 
-function parseHyntaxTreeNode(
-  node: TreeConstructor.AnyNode,
-  options: serializeOptionsType
-) {
+function parseHyntaxTreeNode(node, options) {
   return (
     (creators[node.nodeType] && creators[node.nodeType](node, options)) ||
     undefined
   );
 }
-function getChildren(
-  children: TreeConstructor.AnyNode[],
-  options: serializeOptionsType
-): AllNodeTypes[] {
+function getChildren(children, options) {
   return children
     .map(node => parseHyntaxTreeNode(node, options))
     .filter(filterNoUndefined);
 }
 
 export const serialize = (
-  html: string,
-  { excludedTags = [], allowedTags = [] }: serializeOptionsType = {}
-): AllNodeTypes => {
+  html,
+  { excludedTags = [], allowedTags = [] } = {}
+) => {
   const { tokens } = tokenize(removeLineBreaks(html.trim()));
   const { ast } = constructTree(tokens);
   return creators.document(ast, { excludedTags, allowedTags });
